@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6C5CE7">
+<title>7-Class Review: Monday Challenge!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --ink:#16133F; --white:#fff;
+  --sky:#62B6FF; --sky-2:#9AD6FF; --lime:#C6F432; --sun:#FFD23F; --mint:#8FE9C0;
+  --night:#170B47; --violet:#2A1670; --cyan:#34E8FF; --amber:#FF9D4D; --red:#FF6B6B;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --fs-h1:clamp(2.2rem,8vmin + .4rem,5.6rem);
+  --fs-h2:clamp(2rem,6.8vmin + .4rem,4.8rem);
+  --fs-qz:clamp(1.25rem,3.3vmin + .4rem,2.2rem);
+  --fs-lead:clamp(1.15rem,3.2vmin + .4rem,2.3rem);
+  --fs-small:clamp(.95rem,2.2vmin + .4rem,1.6rem);
+  --fs-opt:clamp(.95rem,2.1vmin + .4rem,1.35rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+html{background:var(--night);overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{overflow:hidden;font-family:var(--body);color:var(--ink);-webkit-tap-highlight-color:transparent}
+h1,h2,p{margin:0}
+
+.deck{position:fixed;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;outline:none}
+.deck::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 100%;min-width:0;height:100%;display:flex;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scroll-snap-align:start;scroll-snap-stop:always;color:var(--fg,var(--ink))}
+.inner{--pad:clamp(18px,4.5vmin,60px);margin:auto;width:100%;max-width:900px;display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:clamp(10px,2.2vmin,22px);
+  padding:calc(var(--pad) + env(safe-area-inset-top,0px)) calc(var(--pad) + env(safe-area-inset-right,0px)) calc(var(--pad) + 84px + env(safe-area-inset-bottom,0px)) calc(var(--pad) + env(safe-area-inset-left,0px))}
+@media (max-height:480px){
+  .inner{padding-bottom:calc(var(--pad) + 64px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---------- themes ---------- */
+.theme-ar{--fg:var(--ink);background:radial-gradient(60vmin 40vmin at 15% 12%,rgba(255,255,255,.55),transparent 70%),linear-gradient(180deg,var(--sky-2),var(--sky))}
+.theme-mr{--fg:#fff;background:
+  radial-gradient(55vmin 40vmin at 12% 85%,rgba(255,157,77,.35),transparent 70%),
+  radial-gradient(50vmin 36vmin at 90% 15%,rgba(255,157,77,.22),transparent 70%),
+  linear-gradient(160deg,var(--violet) 0%,var(--night) 70%);box-shadow:inset 0 0 20vmin rgba(0,0,0,.5)}
+.theme-mix{--fg:var(--ink);background:linear-gradient(105deg,var(--sky) 0 50%,var(--night) 50% 100%)}
+.theme-quiz{--fg:var(--ink);background:repeating-linear-gradient(135deg,rgba(255,255,255,.28) 0 3.2vmin,transparent 3.2vmin 6.4vmin),var(--sun)}
+
+/* ---------- type ---------- */
+h1,h2{font-family:var(--display);font-weight:400;line-height:1.06;letter-spacing:.005em;text-wrap:balance}
+h1{font-size:var(--fs-h1)}
+h2{font-size:var(--fs-h2)}
+h2.q{font-size:var(--fs-qz);line-height:1.2;max-width:42rem}
+.lead{font-size:var(--fs-lead);line-height:1.28;max-width:30ch;text-wrap:pretty}
+.panel .lead{margin-inline:auto}
+
+.mode{display:inline-flex;align-items:center;font:400 var(--fs-small)/1 var(--display);padding:.3em .85em;border:3px solid var(--ink);border-radius:999px;background:var(--white);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+/* ---------- answer options ---------- */
+.options{display:grid;gap:clamp(8px,1.7vmin,14px);margin-top:clamp(6px,1.3vmin,12px);width:100%;max-width:38rem}
+.option{font:700 var(--fs-opt)/1.22 var(--body);padding:.6em .9em;border:4px solid var(--ink);border-radius:18px;background:var(--white);color:var(--ink);box-shadow:5px 5px 0 var(--ink);cursor:pointer;text-align:left;touch-action:manipulation}
+.option:hover:not(:disabled){background:#F3F0FF}
+.option:active:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.option:disabled{cursor:default}
+.option:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
+.option.correct{background:var(--lime)}
+.option.correct::after{content:" ✓";font-family:var(--display)}
+.option.wrong{background:var(--red);color:var(--white)}
+.option.wrong::after{content:" ✗";font-family:var(--display)}
+.why{display:none;max-width:38rem;padding:.6em .9em;border:4px solid var(--ink);border-radius:18px;background:var(--white);color:var(--ink);font-size:var(--fs-opt);line-height:1.25;font-weight:700;text-align:left}
+.why strong{font-family:var(--display);font-weight:400;margin-right:.3em}
+.options[data-answered] + .why{display:block;animation:settle .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes settle{from{transform:scale(.9)}to{transform:none}}
+@media (min-aspect-ratio:5/4){
+  h2.q{max-width:52rem}
+  .options{grid-template-columns:1fr 1fr;max-width:52rem}
+  .why{max-width:52rem}
+}
+
+/* ---------- title + results panel ---------- */
+.panel{width:100%;max-width:46rem;padding:clamp(20px,4vmin,48px);display:grid;justify-items:center;gap:clamp(8px,1.6vmin,16px);background:var(--white);color:var(--ink);border:5px solid var(--ink);border-radius:32px;box-shadow:12px 12px 0 var(--ink)}
+.hint{display:flex;align-items:center;gap:.6em;margin-top:clamp(10px,2vmin,20px);font-size:var(--fs-small);font-weight:700}
+.chev{width:.7em;height:.7em;border-top:.16em solid currentColor;border-right:.16em solid currentColor;transform:rotate(45deg);animation:nudge 1.1s ease-in-out 3}
+@keyframes nudge{50%{transform:translateX(.35em) rotate(45deg)}}
+.scoreBig{font:400 var(--fs-h1)/1 var(--display);margin-top:.1em}
+.dayScores{display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,1.4vmin,10px);width:100%;max-width:26rem;text-align:left}
+.dayScores div{padding:.4em .7em;border:3px solid var(--ink);border-radius:14px;background:#F3F0FF;font-weight:700;font-size:var(--fs-small);line-height:1.2}
+
+/* ---------- navigation ---------- */
+.progress{position:fixed;top:0;left:0;right:0;height:8px;z-index:20;background:rgba(22,19,63,.18);pointer-events:none}
+.progress i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(.02);background:linear-gradient(90deg,var(--lime),var(--amber),var(--cyan));transition:transform .35s ease}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.tray{pointer-events:auto;display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--white);border:3px solid var(--ink);border-radius:999px;box-shadow:4px 4px 0 var(--ink)}
+.tray button{width:44px;height:44px;padding:0;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;background:var(--sun);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.tray button:hover:not(:disabled){background:#6C5CE7;color:#fff}
+.tray button:active:not(:disabled){transform:translateY(2px)}
+.tray button:disabled{opacity:.35;cursor:default}
+.tray button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.tray button[hidden]{display:none}
+.tray svg{width:22px;height:22px}
+.count{min-width:7ch;text-align:center;font:400 1.05rem/1 var(--display);color:var(--ink)}
+@media (max-height:480px){
+  .tray button{width:38px;height:38px}
+  .tray{padding:4px 6px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+<main class="deck" id="deck" aria-label="7-class review quiz">
+
+<!-- 1 Title -->
+<section class="slide theme-mix is-active">
+  <div class="inner">
+    <div class="panel">
+      <h1>7-Class Review</h1>
+      <p class="lead">28 questions covering everything from Day 1 to Day 7. Tap an option to see if you're right!</p>
+      <p class="hint"><span>Swipe, or press the right arrow key, to start</span><i class="chev" aria-hidden="true"></i></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 Day 1 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 1</h1>
+    <p class="lead">AR &amp; VR Basics — 4 questions</p>
+  </div>
+</section>
+
+<!-- 3 Q1 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 1 of 4</p>
+    <h2 class="q">In Pokémon Go, creatures appear through your phone's camera, layered onto the real world around you. Which reality is this?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option data-correct="true">AR — digital creatures are added on top of the real world</button>
+      <button class="option" type="button" data-option>VR — the real world is replaced by the game</button>
+      <button class="option" type="button" data-option>MR — the creatures interact with real objects</button>
+      <button class="option" type="button" data-option>None of these — phone games aren't AR, VR, or MR</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real world stays fully visible — digital creatures are just added on top.</p>
+  </div>
+</section>
+
+<!-- 4 Q2 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 2 of 4</p>
+    <h2 class="q">Which statement correctly describes the difference between AR and VR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>AR and VR both completely replace the real world</button>
+      <button class="option" type="button" data-option data-correct="true">AR adds to the real world; VR replaces it</button>
+      <button class="option" type="button" data-option>AR replaces the real world; VR adds to it</button>
+      <button class="option" type="button" data-option>There is no real difference between them</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR layers digital on top of reality. VR swaps reality out entirely.</p>
+  </div>
+</section>
+
+<!-- 5 Q3 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 3 of 4</p>
+    <h2 class="q">A friend puts on a headset and can no longer see their room at all — they're fully inside a digital world. Which reality are they using?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option>A regular video game on a TV</button>
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real room is completely hidden — that's VR replacing the view.</p>
+  </div>
+</section>
+
+<!-- 6 Q4 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 4 of 4</p>
+    <h2 class="q">Which of these is the BEST real-life example of AR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>Watching a movie on a flat TV screen</button>
+      <button class="option" type="button" data-option>Reading a paper book</button>
+      <button class="option" type="button" data-option>Listening to music through headphones</button>
+      <button class="option" type="button" data-option data-correct="true">A face filter that adds animal ears during a video call</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real face stays visible — digital ears are just added on top.</p>
+  </div>
+</section>
+
+<!-- 7 Day 2 divider -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <h1>Day 2</h1>
+    <p class="lead">AR vs VR vs MR — 4 questions</p>
+  </div>
+</section>
+
+<!-- 8 Q5 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 1 of 4</p>
+    <h2 class="q">What is the golden rule for MR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option data-correct="true">MR blends real and digital together, and they can affect each other</button>
+      <button class="option" type="button" data-option>MR only adds digital things</button>
+      <button class="option" type="button" data-option>MR only replaces the real world</button>
+      <button class="option" type="button" data-option>MR is not a real type of technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>MR is defined by real and digital things interacting — that's what "blends" means.</p>
+  </div>
+</section>
+
+<!-- 9 Q6 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 2 of 4</p>
+    <h2 class="q">A hologram dragon lands on a real desk, and part of its tail is hidden behind a real lamp in front of it. Which reality is this, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>AR — because it's a hologram</button>
+      <button class="option" type="button" data-option data-correct="true">MR — because the real lamp blocks part of the digital dragon</button>
+      <button class="option" type="button" data-option>VR — because it's 3D</button>
+      <button class="option" type="button" data-option>None of these — this isn't possible</button>
+    </div>
+    <p class="why"><strong>Why?</strong>A real object blocking part of a digital one is the signature of MR.</p>
+  </div>
+</section>
+
+<!-- 10 Q7 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 3 of 4</p>
+    <h2 class="q">Which of these pairs is matched CORRECTLY?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>AR = replaces, VR = adds</button>
+      <button class="option" type="button" data-option>AR = blends, VR = adds</button>
+      <button class="option" type="button" data-option data-correct="true">AR = adds, VR = replaces</button>
+      <button class="option" type="button" data-option>AR = replaces, VR = blends</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The golden rule: AR adds, VR replaces, MR blends.</p>
+  </div>
+</section>
+
+<!-- 11 Q8 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 4 of 4</p>
+    <h2 class="q">A friend says, "AR and MR are the same thing, since both keep the real world visible." What's the best response?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>Agree completely — they are identical</button>
+      <button class="option" type="button" data-option>Disagree — only MR keeps the real world visible</button>
+      <button class="option" type="button" data-option>Agree, but only for phone-based AR</button>
+      <button class="option" type="button" data-option data-correct="true">Disagree — MR lets real and digital affect each other, AR just adds on top</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Both keep reality visible, but only MR lets real and digital objects interact.</p>
+  </div>
+</section>
+
+<!-- 12 Day 3 divider -->
+<section class="slide theme-mr">
+  <div class="inner">
+    <h1>Day 3</h1>
+    <p class="lead">Gear &amp; Devices — 4 questions</p>
+  </div>
+</section>
+
+<!-- 13 Q9 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 1 of 4</p>
+    <h2 class="q">What does a basic AR experience need, at minimum?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option data-correct="true">A phone or tablet's camera and screen</button>
+      <button class="option" type="button" data-option>A fully-enclosed headset</button>
+      <button class="option" type="button" data-option>Nothing at all</button>
+      <button class="option" type="button" data-option>A pair of regular sunglasses</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The camera sees real life, and the screen adds the digital extras — that's all AR needs.</p>
+  </div>
+</section>
+
+<!-- 14 Q10 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 2 of 4</p>
+    <h2 class="q">What makes an MR headset's lenses different from a VR headset's?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>MR lenses are completely blacked out</button>
+      <button class="option" type="button" data-option data-correct="true">MR lenses are see-through, so real and digital are both visible</button>
+      <button class="option" type="button" data-option>MR headsets don't use lenses at all</button>
+      <button class="option" type="button" data-option>There is no real difference</button>
+    </div>
+    <p class="why"><strong>Why?</strong>See-through lenses are what let MR blend real and digital at once.</p>
+  </div>
+</section>
+
+<!-- 15 Q11 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 3 of 4</p>
+    <h2 class="q">In VR, how do you typically interact with objects in the digital world?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>With your real, bare hands directly</button>
+      <button class="option" type="button" data-option>With a phone camera</button>
+      <button class="option" type="button" data-option data-correct="true">With hand controllers</button>
+      <button class="option" type="button" data-option>You cannot interact with anything in VR</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Controllers let you "reach into" the digital world your real hands can't see.</p>
+  </div>
+</section>
+
+<!-- 16 Q12 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 4 of 4</p>
+    <h2 class="q">Why do AR glasses NOT need to fully cover your eyes, the way a VR headset does?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>AR glasses are too expensive to make fully enclosed</button>
+      <button class="option" type="button" data-option>AR glasses don't actually show anything digital</button>
+      <button class="option" type="button" data-option>It's just a random design choice</button>
+      <button class="option" type="button" data-option data-correct="true">AR is adding to the real world, which still needs to stay visible</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR's whole job is adding onto reality, so reality must stay visible.</p>
+  </div>
+</section>
+
+<!-- 17 Day 4 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 4</h1>
+    <p class="lead">Careers &amp; Industries — 4 questions</p>
+  </div>
+</section>
+
+<!-- 18 Q13 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 1 of 4</p>
+    <h2 class="q">A surgeon sees a hologram of a patient's insides blended right onto the real patient during an operation. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option data-correct="true">MR — the hologram blends with and reacts to the real body</button>
+      <button class="option" type="button" data-option>VR — because it's a hologram</button>
+      <button class="option" type="button" data-option>AR — because it's used in a hospital</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Blending with the real body — not just floating on top — is MR's signature.</p>
+  </div>
+</section>
+
+<!-- 19 Q14 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 2 of 4</p>
+    <h2 class="q">An astronaut practices a spacewalk with no real training room visible at all. Which reality fits best?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option>A regular simulation on a screen</button>
+    </div>
+    <p class="why"><strong>Why?</strong>No real room visible means the whole view has been replaced — VR.</p>
+  </div>
+</section>
+
+<!-- 20 Q15 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 3 of 4</p>
+    <h2 class="q">A football coach sees player stats appear right on the real field during a game. Which reality?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>VR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option data-correct="true">AR</button>
+      <button class="option" type="button" data-option>This isn't possible with any of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real field stays fully visible — stats are just added on top.</p>
+  </div>
+</section>
+
+<!-- 21 Q16 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 4 of 4</p>
+    <h2 class="q">Which job pairing is matched correctly?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>Firefighter trains in AR; architect walks through VR buildings</button>
+      <button class="option" type="button" data-option>Firefighter trains in MR; architect walks through AR buildings</button>
+      <button class="option" type="button" data-option>Both use the exact same reality</button>
+      <button class="option" type="button" data-option data-correct="true">Firefighter trains in VR; architect walks through MR holograms</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Firefighters need a fully virtual building (VR); architects blend a hologram into real space (MR).</p>
+  </div>
+</section>
+
+<!-- 22 Day 5 divider -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <h1>Day 5</h1>
+    <p class="lead">Entertainment — 4 questions</p>
+  </div>
+</section>
+
+<!-- 23 Q17 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 1 of 4</p>
+    <h2 class="q">A fan wears a headset to feel like they're in the front row of a concert happening far away. Which reality?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option>A live stream on a phone</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The headset replaces the fan's whole view with the digital concert world.</p>
+  </div>
+</section>
+
+<!-- 24 Q18 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 2 of 4</p>
+    <h2 class="q">A movie poster plays a trailer when you point your phone at it. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>VR — the poster is replaced by a video</button>
+      <button class="option" type="button" data-option data-correct="true">AR — the real poster stays, and digital video is added on top</button>
+      <button class="option" type="button" data-option>MR — the poster can block the video</button>
+      <button class="option" type="button" data-option>None of these — this isn't real technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real poster is still right there — the trailer is just added on top.</p>
+  </div>
+</section>
+
+<!-- 25 Q19 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 3 of 4</p>
+    <h2 class="q">A filmmaker wears a headset on set to see a digital dinosaur standing next to the real actors, before it's ever added for real. Which reality fits, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>VR — because it's for making movies</button>
+      <button class="option" type="button" data-option>AR — because the actors are real people</button>
+      <button class="option" type="button" data-option data-correct="true">MR — the digital dinosaur blends with the real set</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Seeing a digital creature standing right there among real people and props is MR.</p>
+  </div>
+</section>
+
+<!-- 26 Q20 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 4 of 4</p>
+    <h2 class="q">Which best describes a VR roller coaster ride?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>A digital label added on top of a real coaster</button>
+      <button class="option" type="button" data-option>A hologram that blends with the real track</button>
+      <button class="option" type="button" data-option>Just a regular coaster with no technology involved</button>
+      <button class="option" type="button" data-option data-correct="true">Real motion combined with a fully digital view that replaces the real park</button>
+    </div>
+    <p class="why"><strong>Why?</strong>You really move, but everything you SEE is digital — the park is replaced.</p>
+  </div>
+</section>
+
+<!-- 27 Day 6 divider -->
+<section class="slide theme-mr">
+  <div class="inner">
+    <h1>Day 6</h1>
+    <p class="lead">Education — 4 questions</p>
+  </div>
+</section>
+
+<!-- 28 Q21 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 1 of 4</p>
+    <h2 class="q">A student points a tablet at a real plant and a label pops up with its name. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option data-correct="true">AR — the label is added on top of the real plant</button>
+      <button class="option" type="button" data-option>VR — the garden is replaced</button>
+      <button class="option" type="button" data-option>MR — the plant becomes a hologram</button>
+      <button class="option" type="button" data-option>This isn't possible with current technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real plant stays — a digital label is simply added on top.</p>
+  </div>
+</section>
+
+<!-- 29 Q22 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 2 of 4</p>
+    <h2 class="q">A class walks around a life-size hologram of the human body that floats in the real classroom. Which reality fits best?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option data-correct="true">MR</button>
+      <button class="option" type="button" data-option>VR</button>
+      <button class="option" type="button" data-option>A projector and screen</button>
+    </div>
+    <p class="why"><strong>Why?</strong>A hologram sharing the real classroom, that students walk around, is MR blending the two.</p>
+  </div>
+</section>
+
+<!-- 30 Q23 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 3 of 4</p>
+    <h2 class="q">Why would a teacher choose VR instead of MR for a lesson about ancient Rome?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>VR is always better than MR</button>
+      <button class="option" type="button" data-option>MR cannot show historical places</button>
+      <button class="option" type="button" data-option data-correct="true">VR can fully replace the view, so no modern classroom is visible at all</button>
+      <button class="option" type="button" data-option>There is no real difference for this lesson</button>
+    </div>
+    <p class="why"><strong>Why?</strong>For a fully immersive "you are there" trip, only VR removes the real world entirely.</p>
+  </div>
+</section>
+
+<!-- 31 Q24 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 4 of 4</p>
+    <h2 class="q">A trainee mechanic needs to see glowing arrows on a REAL engine while using real tools. Why is MR the better choice over VR here?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>VR is only for playing games</button>
+      <button class="option" type="button" data-option>MR is newer technology, so it's automatically better</button>
+      <button class="option" type="button" data-option>VR cannot show glowing arrows</button>
+      <button class="option" type="button" data-option data-correct="true">VR would hide the real engine and tools, which the mechanic still needs to see</button>
+    </div>
+    <p class="why"><strong>Why?</strong>MR keeps real tools and the real engine visible while adding digital arrows.</p>
+  </div>
+</section>
+
+<!-- 32 Day 7 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 7</h1>
+    <p class="lead">Safety &amp; Digital Citizenship — 4 questions</p>
+  </div>
+</section>
+
+<!-- 33 Q25 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 1 of 4</p>
+    <h2 class="q">A Ranger feels dizzy while using VR. What's the smart thing to do?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option data-correct="true">Take the headset off and sit down for a bit</button>
+      <button class="option" type="button" data-option>Keep going until it passes</button>
+      <button class="option" type="button" data-option>Turn up the brightness</button>
+      <button class="option" type="button" data-option>Spin around to adjust faster</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Motion sickness means your body needs a break — stopping is always right.</p>
+  </div>
+</section>
+
+<!-- 34 Q26 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 2 of 4</p>
+    <h2 class="q">Why should you always ask a parent before trying a new AR, VR, or MR device?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>Parents always say no</button>
+      <button class="option" type="button" data-option data-correct="true">Age limits and safety guidelines vary by device</button>
+      <button class="option" type="button" data-option>Headsets are always broken</button>
+      <button class="option" type="button" data-option>It's just a formality with no real reason</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Different devices have different age guidelines — an adult should always check first.</p>
+  </div>
+</section>
+
+<!-- 35 Q27 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 3 of 4</p>
+    <h2 class="q">Someone is playing an AR game on a sidewalk, staring only at their screen. What's the safest habit?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>Keep eyes only on the screen for the best score</button>
+      <button class="option" type="button" data-option>Only ever play AR games at home</button>
+      <button class="option" type="button" data-option data-correct="true">Glance up often to check for real obstacles</button>
+      <button class="option" type="button" data-option>Ask a friend to walk ahead of them at all times</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR adds to the real world, but you're still walking through it — checking often keeps you safe.</p>
+  </div>
+</section>
+
+<!-- 36 Q28 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 4 of 4</p>
+    <h2 class="q">Why should you ask before using AR or MR glasses inside someone else's home?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>The glasses might overheat</button>
+      <button class="option" type="button" data-option>It uses too much battery</button>
+      <button class="option" type="button" data-option data-correct="true">Some devices can record the real room around you</button>
+      <button class="option" type="button" data-option>There's no real reason, it's always fine</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Many AR/MR devices use outward cameras to blend digital and real — always ask first.</p>
+  </div>
+</section>
+
+<!-- 37 Results -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <div class="panel">
+      <h2>Review Complete!</h2>
+      <p class="lead">You scored:</p>
+      <p class="scoreBig"><span id="scoreNum">0</span> / <span id="scoreTotal">28</span></p>
+      <p class="lead" id="scoreMsg">Answer every question to see your result!</p>
+      <div class="dayScores" id="dayScores" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Slide controls">
+  <div class="tray">
+    <button id="prev" type="button" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="count" id="count">1 / 37</span>
+    <button id="next" type="button" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="fs" type="button" aria-label="Toggle full screen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length;
+  const bar = document.getElementById('bar');
+  const count = document.getElementById('count');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let index = 0;
+  let target = 0;
+  let lock = false;
+  let lockTimer = 0;
+  let ticking = false;
+
+  slides.forEach((s, k) => {
+    s.setAttribute('role', 'group');
+    s.setAttribute('aria-roledescription', 'slide');
+    s.setAttribute('aria-label', `Slide ${k + 1} of ${total}`);
+  });
+
+  const width = () => deck.clientWidth || window.innerWidth;
+
+  function setIndex(i) {
+    index = i;
+    slides.forEach((s, k) => {
+      const on = k === i;
+      s.classList.toggle('is-active', on);
+      s.inert = !on;
+    });
+    bar.style.transform = `scaleX(${(i + 1) / total})`;
+    count.textContent = `${i + 1} / ${total}`;
+    prev.disabled = i === 0;
+    next.disabled = i === total - 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (_) {}
+  }
+
+  function goTo(i) {
+    i = Math.max(0, Math.min(total - 1, i));
+    const smooth = !reduce.matches && Math.abs(i - index) === 1;
+    target = i;
+    deck.scrollTo({ left: i * width(), behavior: smooth ? 'smooth' : 'auto' });
+  }
+  const step = (d) => goTo(target + d);
+
+  deck.addEventListener('scroll', () => {
+    if (lock || ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const i = Math.max(0, Math.min(total - 1, Math.round(deck.scrollLeft / width())));
+      if (i !== index) { setIndex(i); target = i; }
+    });
+  }, { passive: true });
+
+  function realign() {
+    lock = true;
+    deck.scrollTo({ left: index * width(), behavior: 'auto' });
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(() => { lock = false; }, 150);
+  }
+  window.addEventListener('resize', realign);
+
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+
+  /* ---- scoring, with a per-day breakdown ---- */
+  const totalQuestions = deck.querySelectorAll('[data-option][data-correct="true"]').length;
+  const days = Array.from(new Set(Array.from(deck.querySelectorAll('.options[data-day]')).map((g) => g.dataset.day)))
+    .sort((a, b) => Number(a) - Number(b));
+  const dayTotal = {};
+  const dayScore = {};
+  days.forEach((d) => {
+    dayTotal[d] = deck.querySelectorAll(`.options[data-day="${d}"]`).length;
+    dayScore[d] = 0;
+  });
+  let score = 0;
+  const scoreNum = document.getElementById('scoreNum');
+  const scoreTotal = document.getElementById('scoreTotal');
+  const scoreMsg = document.getElementById('scoreMsg');
+  const dayScoresEl = document.getElementById('dayScores');
+  if (scoreTotal) scoreTotal.textContent = totalQuestions;
+
+  function renderDayScores() {
+    if (!dayScoresEl) return;
+    dayScoresEl.innerHTML = days.map((d) => `<div>Day ${d}: ${dayScore[d]}/${dayTotal[d]}</div>`).join('');
+  }
+
+  function updateScore() {
+    if (!scoreNum) return;
+    scoreNum.textContent = score;
+    renderDayScores();
+    const answered = deck.querySelectorAll('.options[data-answered]').length;
+    if (answered < totalQuestions) {
+      scoreMsg.textContent = 'Answer every question to see your result!';
+      return;
+    }
+    const pct = score / totalQuestions;
+    if (pct >= 0.85) scoreMsg.textContent = 'Ranger Expert! 🏆';
+    else if (pct >= 0.6) scoreMsg.textContent = 'Great job, Ranger! 🎉';
+    else scoreMsg.textContent = "Good effort! Let's review a few topics together. 💪";
+  }
+
+  deck.addEventListener('click', (e) => {
+    const opt = e.target.closest('[data-option]');
+    if (!opt) return;
+    const group = opt.closest('.options');
+    if (group.dataset.answered) return;
+    group.dataset.answered = '1';
+    const buttons = Array.from(group.querySelectorAll('[data-option]'));
+    buttons.forEach((b) => { b.disabled = true; });
+    const isCorrect = opt.dataset.correct === 'true';
+    opt.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+      const correctBtn = buttons.find((b) => b.dataset.correct === 'true');
+      if (correctBtn) correctBtn.classList.add('correct');
+    } else {
+      score++;
+      const d = group.dataset.day;
+      if (d && Object.prototype.hasOwnProperty.call(dayScore, d)) dayScore[d]++;
+    }
+    updateScore();
+  });
+
+  const root = document.documentElement;
+  const canFs = !!(root.requestFullscreen || root.webkitRequestFullscreen);
+  if (!canFs) fsBtn.hidden = true;
+  function toggleFs() {
+    if (!canFs) return;
+    try {
+      const active = document.fullscreenElement || document.webkitFullscreenElement;
+      const p = active
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+      if (p && p.catch) p.catch(() => {});
+    } catch (_) {}
+  }
+  fsBtn.addEventListener('click', toggleFs);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const onControl = e.target.closest && e.target.closest('button, a, input, textarea, select');
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': e.preventDefault(); step(1); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); step(-1); break;
+      case ' ': if (!onControl) { e.preventDefault(); step(e.shiftKey ? -1 : 1); } break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F': toggleFs(); break;
+    }
+  });
+
+  function readHash() {
+    const m = /^#(\d+)$/.exec(location.hash);
+    return m ? Math.min(total, Math.max(1, parseInt(m[1], 10))) - 1 : 0;
+  }
+  window.addEventListener('hashchange', () => {
+    const i = readHash();
+    if (i !== index) goTo(i);
+  });
+
+  const start = readHash();
+  setIndex(start);
+  target = start;
+  deck.scrollLeft = start * width();
+  renderDayScores();
+  updateScore();
+})();
+</script>
+</body>
+</html>
