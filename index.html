@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#170B47">
+<title>AR · VR · MR Quizzes · Mid-Term &amp; Final Term</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
+<style>
+:root{--ink:#16133F;--night:#170B47;--cyan:#34E8FF;--sun:#FFD23F;--lime:#C6F432;--display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night)}
+.app{display:flex;flex-direction:column;height:100%;height:100dvh}
+.top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--night);border-bottom:4px solid var(--cyan);
+  padding:calc(8px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left))}
+.brand{font-family:var(--display);color:#fff;font-size:1.05rem;line-height:1.1}
+.brand small{display:block;font-family:system-ui,sans-serif;font-size:.72rem;opacity:.75;margin-top:2px}
+.tabs{display:flex;gap:8px}
+.tab{font:400 1rem/1 var(--display);padding:.65em 1.1em;border:3px solid var(--cyan);border-radius:999px;background:transparent;color:#fff;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+.tab small{font-family:system-ui,sans-serif;font-size:.7rem;opacity:.85;margin-left:.4em}
+.tab[aria-selected=true]{background:var(--sun);color:var(--ink);border-color:var(--sun)}
+.tab:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#host{flex:1;min-height:0;position:relative}
+#host iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--night)}
+@media(max-width:560px){.brand small{display:none}.tabs{width:100%}.tab{flex:1;padding:.6em .4em;font-size:.92rem}.tab small{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">AR · VR · MR Quizzes<small>Quaid-e-Azam Rangers School · PPship-IT-QRSC-ARVR Batch 1 · by SAK Hashmi</small></div>
+    <div class="tabs" role="tablist" aria-label="Choose a quiz">
+      <button class="tab" role="tab" id="t-mid" data-k="mid" aria-selected="false">📘 Mid-Term<small>5 Oct</small></button>
+      <button class="tab" role="tab" id="t-final" data-k="final" aria-selected="true">🏆 Final Term Quiz<small>Thu 12 Nov</small></button>
+    </div>
+  </header>
+  <main id="host"></main>
+</div>
+
+<!-- Each quiz is a complete page that runs in its own iframe, so styles never clash and an attempt in progress
+     (answers + timer) is kept when students look at the other tab. -->
+<template id="tpl-mid">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6C5CE7">
+<title>Mid-Term Review Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+:root{
+  --ink:#16133F; --white:#fff;
+  --sky:#62B6FF; --sky-2:#9AD6FF; --lime:#C6F432; --sun:#FFD23F; --mint:#8FE9C0;
+  --night:#170B47; --violet:#2A1670; --cyan:#34E8FF; --amber:#FF9D4D; --red:#FF6B6B;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --fs-h1:clamp(2.2rem,8vmin + .4rem,5.6rem);
+  --fs-h2:clamp(2rem,6.8vmin + .4rem,4.8rem);
+  --fs-qz:clamp(1.25rem,3.3vmin + .4rem,2.2rem);
+  --fs-lead:clamp(1.15rem,3.2vmin + .4rem,2.3rem);
+  --fs-small:clamp(.95rem,2.2vmin + .4rem,1.6rem);
+  --fs-opt:clamp(.95rem,2.1vmin + .4rem,1.35rem);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+html{background:var(--night);overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{overflow:hidden;font-family:var(--body);color:var(--ink);-webkit-tap-highlight-color:transparent}
+h1,h2,p{margin:0}
+
+.deck{position:fixed;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;outline:none}
+.deck::-webkit-scrollbar{display:none}
+.slide{position:relative;flex:0 0 100%;min-width:0;height:100%;display:flex;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scroll-snap-align:start;scroll-snap-stop:always;color:var(--fg,var(--ink))}
+.inner{--pad:clamp(18px,4.5vmin,60px);margin:auto;width:100%;max-width:900px;display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:clamp(10px,2.2vmin,22px);
+  padding:calc(var(--pad) + env(safe-area-inset-top,0px)) calc(var(--pad) + env(safe-area-inset-right,0px)) calc(var(--pad) + 84px + env(safe-area-inset-bottom,0px)) calc(var(--pad) + env(safe-area-inset-left,0px))}
+@media (max-height:480px){
+  .inner{padding-bottom:calc(var(--pad) + 64px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---------- themes ---------- */
+.theme-ar{--fg:var(--ink);background:radial-gradient(60vmin 40vmin at 15% 12%,rgba(255,255,255,.55),transparent 70%),linear-gradient(180deg,var(--sky-2),var(--sky))}
+.theme-mr{--fg:#fff;background:
+  radial-gradient(55vmin 40vmin at 12% 85%,rgba(255,157,77,.35),transparent 70%),
+  radial-gradient(50vmin 36vmin at 90% 15%,rgba(255,157,77,.22),transparent 70%),
+  linear-gradient(160deg,var(--violet) 0%,var(--night) 70%);box-shadow:inset 0 0 20vmin rgba(0,0,0,.5)}
+.theme-mix{--fg:var(--ink);background:linear-gradient(105deg,var(--sky) 0 50%,var(--night) 50% 100%)}
+.theme-quiz{--fg:var(--ink);background:repeating-linear-gradient(135deg,rgba(255,255,255,.28) 0 3.2vmin,transparent 3.2vmin 6.4vmin),var(--sun)}
+
+/* ---------- type ---------- */
+h1,h2{font-family:var(--display);font-weight:400;line-height:1.06;letter-spacing:.005em;text-wrap:balance}
+h1{font-size:var(--fs-h1)}
+h2{font-size:var(--fs-h2)}
+h2.q{font-size:var(--fs-qz);line-height:1.2;max-width:42rem}
+.lead{font-size:var(--fs-lead);line-height:1.28;max-width:30ch;text-wrap:pretty}
+.panel .lead{margin-inline:auto}
+
+.mode{display:inline-flex;align-items:center;font:400 var(--fs-small)/1 var(--display);padding:.3em .85em;border:3px solid var(--ink);border-radius:999px;background:var(--white);color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+/* ---------- answer options ---------- */
+.options{display:grid;gap:clamp(8px,1.7vmin,14px);margin-top:clamp(6px,1.3vmin,12px);width:100%;max-width:38rem}
+.option{font:700 var(--fs-opt)/1.22 var(--body);padding:.6em .9em;border:4px solid var(--ink);border-radius:18px;background:var(--white);color:var(--ink);box-shadow:5px 5px 0 var(--ink);cursor:pointer;text-align:left;touch-action:manipulation}
+.option:hover:not(:disabled){background:#F3F0FF}
+.option:active:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.option:disabled{cursor:default}
+.option:focus-visible{outline:4px solid var(--ink);outline-offset:3px}
+.option.correct{background:var(--lime)}
+.option.correct::after{content:" ✓";font-family:var(--display)}
+.option.wrong{background:var(--red);color:var(--white)}
+.option.wrong::after{content:" ✗";font-family:var(--display)}
+.why{display:none;max-width:38rem;padding:.6em .9em;border:4px solid var(--ink);border-radius:18px;background:var(--white);color:var(--ink);font-size:var(--fs-opt);line-height:1.25;font-weight:700;text-align:left}
+.why strong{font-family:var(--display);font-weight:400;margin-right:.3em}
+.options[data-answered] + .why{display:block;animation:settle .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes settle{from{transform:scale(.9)}to{transform:none}}
+@media (min-aspect-ratio:5/4){
+  h2.q{max-width:52rem}
+  .options{grid-template-columns:1fr 1fr;max-width:52rem}
+  .why{max-width:52rem}
+}
+
+/* ---------- title + results panel ---------- */
+.panel{width:100%;max-width:46rem;padding:clamp(20px,4vmin,48px);display:grid;justify-items:center;gap:clamp(8px,1.6vmin,16px);background:var(--white);color:var(--ink);border:5px solid var(--ink);border-radius:32px;box-shadow:12px 12px 0 var(--ink)}
+.hint{display:flex;align-items:center;gap:.6em;margin-top:clamp(10px,2vmin,20px);font-size:var(--fs-small);font-weight:700}
+.chev{width:.7em;height:.7em;border-top:.16em solid currentColor;border-right:.16em solid currentColor;transform:rotate(45deg);animation:nudge 1.1s ease-in-out 3}
+@keyframes nudge{50%{transform:translateX(.35em) rotate(45deg)}}
+.scoreBig{font:400 var(--fs-h1)/1 var(--display);margin-top:.1em}
+.dayScores{display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,1.4vmin,10px);width:100%;max-width:26rem;text-align:left}
+.dayScores div{padding:.4em .7em;border:3px solid var(--ink);border-radius:14px;background:#F3F0FF;font-weight:700;font-size:var(--fs-small);line-height:1.2}
+
+/* ---------- navigation ---------- */
+.progress{position:fixed;top:0;left:0;right:0;height:8px;z-index:20;background:rgba(22,19,63,.18);pointer-events:none}
+.progress i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(.02);background:linear-gradient(90deg,var(--lime),var(--amber),var(--cyan));transition:transform .35s ease}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;padding:0 12px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.tray{pointer-events:auto;display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--white);border:3px solid var(--ink);border-radius:999px;box-shadow:4px 4px 0 var(--ink)}
+.tray button{width:44px;height:44px;padding:0;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;background:var(--sun);color:var(--ink);cursor:pointer;touch-action:manipulation}
+.tray button:hover:not(:disabled){background:#6C5CE7;color:#fff}
+.tray button:active:not(:disabled){transform:translateY(2px)}
+.tray button:disabled{opacity:.35;cursor:default}
+.tray button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.tray button[hidden]{display:none}
+.tray svg{width:22px;height:22px}
+.count{min-width:7ch;text-align:center;font:400 1.05rem/1 var(--display);color:var(--ink)}
+@media (max-height:480px){
+  .tray button{width:38px;height:38px}
+  .tray{padding:4px 6px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+
+<main class="deck" id="deck" aria-label="7-class review quiz">
+
+<!-- 1 Title -->
+<section class="slide theme-mix is-active">
+  <div class="inner">
+    <div class="panel">
+      <h1>7-Class Review</h1>
+      <p class="lead">28 questions covering everything from Day 1 to Day 7. Tap an option to see if you're right!</p>
+      <p class="hint"><span>Swipe, or press the right arrow key, to start</span><i class="chev" aria-hidden="true"></i></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 Day 1 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 1</h1>
+    <p class="lead">AR &amp; VR Basics — 4 questions</p>
+  </div>
+</section>
+
+<!-- 3 Q1 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 1 of 4</p>
+    <h2 class="q">In Pokémon Go, creatures appear through your phone's camera, layered onto the real world around you. Which reality is this?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option data-correct="true">AR — digital creatures are added on top of the real world</button>
+      <button class="option" type="button" data-option>VR — the real world is replaced by the game</button>
+      <button class="option" type="button" data-option>MR — the creatures interact with real objects</button>
+      <button class="option" type="button" data-option>None of these — phone games aren't AR, VR, or MR</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real world stays fully visible — digital creatures are just added on top.</p>
+  </div>
+</section>
+
+<!-- 4 Q2 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 2 of 4</p>
+    <h2 class="q">Which statement correctly describes the difference between AR and VR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>AR and VR both completely replace the real world</button>
+      <button class="option" type="button" data-option data-correct="true">AR adds to the real world; VR replaces it</button>
+      <button class="option" type="button" data-option>AR replaces the real world; VR adds to it</button>
+      <button class="option" type="button" data-option>There is no real difference between them</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR layers digital on top of reality. VR swaps reality out entirely.</p>
+  </div>
+</section>
+
+<!-- 5 Q3 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 3 of 4</p>
+    <h2 class="q">A friend puts on a headset and can no longer see their room at all — they're fully inside a digital world. Which reality are they using?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option>A regular video game on a TV</button>
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real room is completely hidden — that's VR replacing the view.</p>
+  </div>
+</section>
+
+<!-- 6 Q4 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 1 · Question 4 of 4</p>
+    <h2 class="q">Which of these is the BEST real-life example of AR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="1">
+      <button class="option" type="button" data-option>Watching a movie on a flat TV screen</button>
+      <button class="option" type="button" data-option>Reading a paper book</button>
+      <button class="option" type="button" data-option>Listening to music through headphones</button>
+      <button class="option" type="button" data-option data-correct="true">A face filter that adds animal ears during a video call</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real face stays visible — digital ears are just added on top.</p>
+  </div>
+</section>
+
+<!-- 7 Day 2 divider -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <h1>Day 2</h1>
+    <p class="lead">AR vs VR vs MR — 4 questions</p>
+  </div>
+</section>
+
+<!-- 8 Q5 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 1 of 4</p>
+    <h2 class="q">What is the golden rule for MR?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option data-correct="true">MR blends real and digital together, and they can affect each other</button>
+      <button class="option" type="button" data-option>MR only adds digital things</button>
+      <button class="option" type="button" data-option>MR only replaces the real world</button>
+      <button class="option" type="button" data-option>MR is not a real type of technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>MR is defined by real and digital things interacting — that's what "blends" means.</p>
+  </div>
+</section>
+
+<!-- 9 Q6 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 2 of 4</p>
+    <h2 class="q">A hologram dragon lands on a real desk, and part of its tail is hidden behind a real lamp in front of it. Which reality is this, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>AR — because it's a hologram</button>
+      <button class="option" type="button" data-option data-correct="true">MR — because the real lamp blocks part of the digital dragon</button>
+      <button class="option" type="button" data-option>VR — because it's 3D</button>
+      <button class="option" type="button" data-option>None of these — this isn't possible</button>
+    </div>
+    <p class="why"><strong>Why?</strong>A real object blocking part of a digital one is the signature of MR.</p>
+  </div>
+</section>
+
+<!-- 10 Q7 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 3 of 4</p>
+    <h2 class="q">Which of these pairs is matched CORRECTLY?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>AR = replaces, VR = adds</button>
+      <button class="option" type="button" data-option>AR = blends, VR = adds</button>
+      <button class="option" type="button" data-option data-correct="true">AR = adds, VR = replaces</button>
+      <button class="option" type="button" data-option>AR = replaces, VR = blends</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The golden rule: AR adds, VR replaces, MR blends.</p>
+  </div>
+</section>
+
+<!-- 11 Q8 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 2 · Question 4 of 4</p>
+    <h2 class="q">A friend says, "AR and MR are the same thing, since both keep the real world visible." What's the best response?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="2">
+      <button class="option" type="button" data-option>Agree completely — they are identical</button>
+      <button class="option" type="button" data-option>Disagree — only MR keeps the real world visible</button>
+      <button class="option" type="button" data-option>Agree, but only for phone-based AR</button>
+      <button class="option" type="button" data-option data-correct="true">Disagree — MR lets real and digital affect each other, AR just adds on top</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Both keep reality visible, but only MR lets real and digital objects interact.</p>
+  </div>
+</section>
+
+<!-- 12 Day 3 divider -->
+<section class="slide theme-mr">
+  <div class="inner">
+    <h1>Day 3</h1>
+    <p class="lead">Gear &amp; Devices — 4 questions</p>
+  </div>
+</section>
+
+<!-- 13 Q9 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 1 of 4</p>
+    <h2 class="q">What does a basic AR experience need, at minimum?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option data-correct="true">A phone or tablet's camera and screen</button>
+      <button class="option" type="button" data-option>A fully-enclosed headset</button>
+      <button class="option" type="button" data-option>Nothing at all</button>
+      <button class="option" type="button" data-option>A pair of regular sunglasses</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The camera sees real life, and the screen adds the digital extras — that's all AR needs.</p>
+  </div>
+</section>
+
+<!-- 14 Q10 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 2 of 4</p>
+    <h2 class="q">What makes an MR headset's lenses different from a VR headset's?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>MR lenses are completely blacked out</button>
+      <button class="option" type="button" data-option data-correct="true">MR lenses are see-through, so real and digital are both visible</button>
+      <button class="option" type="button" data-option>MR headsets don't use lenses at all</button>
+      <button class="option" type="button" data-option>There is no real difference</button>
+    </div>
+    <p class="why"><strong>Why?</strong>See-through lenses are what let MR blend real and digital at once.</p>
+  </div>
+</section>
+
+<!-- 15 Q11 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 3 of 4</p>
+    <h2 class="q">In VR, how do you typically interact with objects in the digital world?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>With your real, bare hands directly</button>
+      <button class="option" type="button" data-option>With a phone camera</button>
+      <button class="option" type="button" data-option data-correct="true">With hand controllers</button>
+      <button class="option" type="button" data-option>You cannot interact with anything in VR</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Controllers let you "reach into" the digital world your real hands can't see.</p>
+  </div>
+</section>
+
+<!-- 16 Q12 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 3 · Question 4 of 4</p>
+    <h2 class="q">Why do AR glasses NOT need to fully cover your eyes, the way a VR headset does?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="3">
+      <button class="option" type="button" data-option>AR glasses are too expensive to make fully enclosed</button>
+      <button class="option" type="button" data-option>AR glasses don't actually show anything digital</button>
+      <button class="option" type="button" data-option>It's just a random design choice</button>
+      <button class="option" type="button" data-option data-correct="true">AR is adding to the real world, which still needs to stay visible</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR's whole job is adding onto reality, so reality must stay visible.</p>
+  </div>
+</section>
+
+<!-- 17 Day 4 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 4</h1>
+    <p class="lead">Careers &amp; Industries — 4 questions</p>
+  </div>
+</section>
+
+<!-- 18 Q13 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 1 of 4</p>
+    <h2 class="q">A surgeon sees a hologram of a patient's insides blended right onto the real patient during an operation. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option data-correct="true">MR — the hologram blends with and reacts to the real body</button>
+      <button class="option" type="button" data-option>VR — because it's a hologram</button>
+      <button class="option" type="button" data-option>AR — because it's used in a hospital</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Blending with the real body — not just floating on top — is MR's signature.</p>
+  </div>
+</section>
+
+<!-- 19 Q14 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 2 of 4</p>
+    <h2 class="q">An astronaut practices a spacewalk with no real training room visible at all. Which reality fits best?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option>A regular simulation on a screen</button>
+    </div>
+    <p class="why"><strong>Why?</strong>No real room visible means the whole view has been replaced — VR.</p>
+  </div>
+</section>
+
+<!-- 20 Q15 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 3 of 4</p>
+    <h2 class="q">A football coach sees player stats appear right on the real field during a game. Which reality?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>VR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option data-correct="true">AR</button>
+      <button class="option" type="button" data-option>This isn't possible with any of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real field stays fully visible — stats are just added on top.</p>
+  </div>
+</section>
+
+<!-- 21 Q16 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 4 · Question 4 of 4</p>
+    <h2 class="q">Which job pairing is matched correctly?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="4">
+      <button class="option" type="button" data-option>Firefighter trains in AR; architect walks through VR buildings</button>
+      <button class="option" type="button" data-option>Firefighter trains in MR; architect walks through AR buildings</button>
+      <button class="option" type="button" data-option>Both use the exact same reality</button>
+      <button class="option" type="button" data-option data-correct="true">Firefighter trains in VR; architect walks through MR holograms</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Firefighters need a fully virtual building (VR); architects blend a hologram into real space (MR).</p>
+  </div>
+</section>
+
+<!-- 22 Day 5 divider -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <h1>Day 5</h1>
+    <p class="lead">Entertainment — 4 questions</p>
+  </div>
+</section>
+
+<!-- 23 Q17 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 1 of 4</p>
+    <h2 class="q">A fan wears a headset to feel like they're in the front row of a concert happening far away. Which reality?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option data-correct="true">VR</button>
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option>MR</button>
+      <button class="option" type="button" data-option>A live stream on a phone</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The headset replaces the fan's whole view with the digital concert world.</p>
+  </div>
+</section>
+
+<!-- 24 Q18 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 2 of 4</p>
+    <h2 class="q">A movie poster plays a trailer when you point your phone at it. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>VR — the poster is replaced by a video</button>
+      <button class="option" type="button" data-option data-correct="true">AR — the real poster stays, and digital video is added on top</button>
+      <button class="option" type="button" data-option>MR — the poster can block the video</button>
+      <button class="option" type="button" data-option>None of these — this isn't real technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real poster is still right there — the trailer is just added on top.</p>
+  </div>
+</section>
+
+<!-- 25 Q19 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 3 of 4</p>
+    <h2 class="q">A filmmaker wears a headset on set to see a digital dinosaur standing next to the real actors, before it's ever added for real. Which reality fits, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>VR — because it's for making movies</button>
+      <button class="option" type="button" data-option>AR — because the actors are real people</button>
+      <button class="option" type="button" data-option data-correct="true">MR — the digital dinosaur blends with the real set</button>
+      <button class="option" type="button" data-option>None of these</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Seeing a digital creature standing right there among real people and props is MR.</p>
+  </div>
+</section>
+
+<!-- 26 Q20 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 5 · Question 4 of 4</p>
+    <h2 class="q">Which best describes a VR roller coaster ride?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="5">
+      <button class="option" type="button" data-option>A digital label added on top of a real coaster</button>
+      <button class="option" type="button" data-option>A hologram that blends with the real track</button>
+      <button class="option" type="button" data-option>Just a regular coaster with no technology involved</button>
+      <button class="option" type="button" data-option data-correct="true">Real motion combined with a fully digital view that replaces the real park</button>
+    </div>
+    <p class="why"><strong>Why?</strong>You really move, but everything you SEE is digital — the park is replaced.</p>
+  </div>
+</section>
+
+<!-- 27 Day 6 divider -->
+<section class="slide theme-mr">
+  <div class="inner">
+    <h1>Day 6</h1>
+    <p class="lead">Education — 4 questions</p>
+  </div>
+</section>
+
+<!-- 28 Q21 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 1 of 4</p>
+    <h2 class="q">A student points a tablet at a real plant and a label pops up with its name. Which reality, and why?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option data-correct="true">AR — the label is added on top of the real plant</button>
+      <button class="option" type="button" data-option>VR — the garden is replaced</button>
+      <button class="option" type="button" data-option>MR — the plant becomes a hologram</button>
+      <button class="option" type="button" data-option>This isn't possible with current technology</button>
+    </div>
+    <p class="why"><strong>Why?</strong>The real plant stays — a digital label is simply added on top.</p>
+  </div>
+</section>
+
+<!-- 29 Q22 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 2 of 4</p>
+    <h2 class="q">A class walks around a life-size hologram of the human body that floats in the real classroom. Which reality fits best?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>AR</button>
+      <button class="option" type="button" data-option data-correct="true">MR</button>
+      <button class="option" type="button" data-option>VR</button>
+      <button class="option" type="button" data-option>A projector and screen</button>
+    </div>
+    <p class="why"><strong>Why?</strong>A hologram sharing the real classroom, that students walk around, is MR blending the two.</p>
+  </div>
+</section>
+
+<!-- 30 Q23 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 3 of 4</p>
+    <h2 class="q">Why would a teacher choose VR instead of MR for a lesson about ancient Rome?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>VR is always better than MR</button>
+      <button class="option" type="button" data-option>MR cannot show historical places</button>
+      <button class="option" type="button" data-option data-correct="true">VR can fully replace the view, so no modern classroom is visible at all</button>
+      <button class="option" type="button" data-option>There is no real difference for this lesson</button>
+    </div>
+    <p class="why"><strong>Why?</strong>For a fully immersive "you are there" trip, only VR removes the real world entirely.</p>
+  </div>
+</section>
+
+<!-- 31 Q24 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 6 · Question 4 of 4</p>
+    <h2 class="q">A trainee mechanic needs to see glowing arrows on a REAL engine while using real tools. Why is MR the better choice over VR here?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="6">
+      <button class="option" type="button" data-option>VR is only for playing games</button>
+      <button class="option" type="button" data-option>MR is newer technology, so it's automatically better</button>
+      <button class="option" type="button" data-option>VR cannot show glowing arrows</button>
+      <button class="option" type="button" data-option data-correct="true">VR would hide the real engine and tools, which the mechanic still needs to see</button>
+    </div>
+    <p class="why"><strong>Why?</strong>MR keeps real tools and the real engine visible while adding digital arrows.</p>
+  </div>
+</section>
+
+<!-- 32 Day 7 divider -->
+<section class="slide theme-ar">
+  <div class="inner">
+    <h1>Day 7</h1>
+    <p class="lead">Safety &amp; Digital Citizenship — 4 questions</p>
+  </div>
+</section>
+
+<!-- 33 Q25 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 1 of 4</p>
+    <h2 class="q">A Ranger feels dizzy while using VR. What's the smart thing to do?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option data-correct="true">Take the headset off and sit down for a bit</button>
+      <button class="option" type="button" data-option>Keep going until it passes</button>
+      <button class="option" type="button" data-option>Turn up the brightness</button>
+      <button class="option" type="button" data-option>Spin around to adjust faster</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Motion sickness means your body needs a break — stopping is always right.</p>
+  </div>
+</section>
+
+<!-- 34 Q26 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 2 of 4</p>
+    <h2 class="q">Why should you always ask a parent before trying a new AR, VR, or MR device?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>Parents always say no</button>
+      <button class="option" type="button" data-option data-correct="true">Age limits and safety guidelines vary by device</button>
+      <button class="option" type="button" data-option>Headsets are always broken</button>
+      <button class="option" type="button" data-option>It's just a formality with no real reason</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Different devices have different age guidelines — an adult should always check first.</p>
+  </div>
+</section>
+
+<!-- 35 Q27 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 3 of 4</p>
+    <h2 class="q">Someone is playing an AR game on a sidewalk, staring only at their screen. What's the safest habit?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>Keep eyes only on the screen for the best score</button>
+      <button class="option" type="button" data-option>Only ever play AR games at home</button>
+      <button class="option" type="button" data-option data-correct="true">Glance up often to check for real obstacles</button>
+      <button class="option" type="button" data-option>Ask a friend to walk ahead of them at all times</button>
+    </div>
+    <p class="why"><strong>Why?</strong>AR adds to the real world, but you're still walking through it — checking often keeps you safe.</p>
+  </div>
+</section>
+
+<!-- 36 Q28 -->
+<section class="slide theme-quiz">
+  <div class="inner">
+    <p class="mode">Day 7 · Question 4 of 4</p>
+    <h2 class="q">Why should you ask before using AR or MR glasses inside someone else's home?</h2>
+    <div class="options" role="group" aria-label="Answer options" data-day="7">
+      <button class="option" type="button" data-option>The glasses might overheat</button>
+      <button class="option" type="button" data-option>It uses too much battery</button>
+      <button class="option" type="button" data-option data-correct="true">Some devices can record the real room around you</button>
+      <button class="option" type="button" data-option>There's no real reason, it's always fine</button>
+    </div>
+    <p class="why"><strong>Why?</strong>Many AR/MR devices use outward cameras to blend digital and real — always ask first.</p>
+  </div>
+</section>
+
+<!-- 37 Results -->
+<section class="slide theme-mix">
+  <div class="inner">
+    <div class="panel">
+      <h2>Review Complete!</h2>
+      <p class="lead">You scored:</p>
+      <p class="scoreBig"><span id="scoreNum">0</span> / <span id="scoreTotal">28</span></p>
+      <p class="lead" id="scoreMsg">Answer every question to see your result!</p>
+      <div class="dayScores" id="dayScores" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Slide controls">
+  <div class="tray">
+    <button id="prev" type="button" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="count" id="count">1 / 37</span>
+    <button id="next" type="button" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button id="fs" type="button" aria-label="Toggle full screen">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const total = slides.length;
+  const bar = document.getElementById('bar');
+  const count = document.getElementById('count');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const fsBtn = document.getElementById('fs');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let index = 0;
+  let target = 0;
+  let lock = false;
+  let lockTimer = 0;
+  let ticking = false;
+
+  slides.forEach((s, k) => {
+    s.setAttribute('role', 'group');
+    s.setAttribute('aria-roledescription', 'slide');
+    s.setAttribute('aria-label', `Slide ${k + 1} of ${total}`);
+  });
+
+  const width = () => deck.clientWidth || window.innerWidth;
+
+  function setIndex(i) {
+    index = i;
+    slides.forEach((s, k) => {
+      const on = k === i;
+      s.classList.toggle('is-active', on);
+      s.inert = !on;
+    });
+    bar.style.transform = `scaleX(${(i + 1) / total})`;
+    count.textContent = `${i + 1} / ${total}`;
+    prev.disabled = i === 0;
+    next.disabled = i === total - 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (_) {}
+  }
+
+  function goTo(i) {
+    i = Math.max(0, Math.min(total - 1, i));
+    const smooth = !reduce.matches && Math.abs(i - index) === 1;
+    target = i;
+    deck.scrollTo({ left: i * width(), behavior: smooth ? 'smooth' : 'auto' });
+  }
+  const step = (d) => goTo(target + d);
+
+  deck.addEventListener('scroll', () => {
+    if (lock || ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const i = Math.max(0, Math.min(total - 1, Math.round(deck.scrollLeft / width())));
+      if (i !== index) { setIndex(i); target = i; }
+    });
+  }, { passive: true });
+
+  function realign() {
+    lock = true;
+    deck.scrollTo({ left: index * width(), behavior: 'auto' });
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(() => { lock = false; }, 150);
+  }
+  window.addEventListener('resize', realign);
+
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+
+  /* ---- scoring, with a per-day breakdown ---- */
+  const totalQuestions = deck.querySelectorAll('[data-option][data-correct="true"]').length;
+  const days = Array.from(new Set(Array.from(deck.querySelectorAll('.options[data-day]')).map((g) => g.dataset.day)))
+    .sort((a, b) => Number(a) - Number(b));
+  const dayTotal = {};
+  const dayScore = {};
+  days.forEach((d) => {
+    dayTotal[d] = deck.querySelectorAll(`.options[data-day="${d}"]`).length;
+    dayScore[d] = 0;
+  });
+  let score = 0;
+  const scoreNum = document.getElementById('scoreNum');
+  const scoreTotal = document.getElementById('scoreTotal');
+  const scoreMsg = document.getElementById('scoreMsg');
+  const dayScoresEl = document.getElementById('dayScores');
+  if (scoreTotal) scoreTotal.textContent = totalQuestions;
+
+  function renderDayScores() {
+    if (!dayScoresEl) return;
+    dayScoresEl.innerHTML = days.map((d) => `<div>Day ${d}: ${dayScore[d]}/${dayTotal[d]}</div>`).join('');
+  }
+
+  function updateScore() {
+    if (!scoreNum) return;
+    scoreNum.textContent = score;
+    renderDayScores();
+    const answered = deck.querySelectorAll('.options[data-answered]').length;
+    if (answered < totalQuestions) {
+      scoreMsg.textContent = 'Answer every question to see your result!';
+      return;
+    }
+    const pct = score / totalQuestions;
+    if (pct >= 0.85) scoreMsg.textContent = 'Ranger Expert! 🏆';
+    else if (pct >= 0.6) scoreMsg.textContent = 'Great job, Ranger! 🎉';
+    else scoreMsg.textContent = "Good effort! Let's review a few topics together. 💪";
+  }
+
+  deck.addEventListener('click', (e) => {
+    const opt = e.target.closest('[data-option]');
+    if (!opt) return;
+    const group = opt.closest('.options');
+    if (group.dataset.answered) return;
+    group.dataset.answered = '1';
+    const buttons = Array.from(group.querySelectorAll('[data-option]'));
+    buttons.forEach((b) => { b.disabled = true; });
+    const isCorrect = opt.dataset.correct === 'true';
+    opt.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+      const correctBtn = buttons.find((b) => b.dataset.correct === 'true');
+      if (correctBtn) correctBtn.classList.add('correct');
+    } else {
+      score++;
+      const d = group.dataset.day;
+      if (d && Object.prototype.hasOwnProperty.call(dayScore, d)) dayScore[d]++;
+    }
+    updateScore();
+  });
+
+  const root = document.documentElement;
+  const canFs = !!(root.requestFullscreen || root.webkitRequestFullscreen);
+  if (!canFs) fsBtn.hidden = true;
+  function toggleFs() {
+    if (!canFs) return;
+    try {
+      const active = document.fullscreenElement || document.webkitFullscreenElement;
+      const p = active
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+      if (p && p.catch) p.catch(() => {});
+    } catch (_) {}
+  }
+  fsBtn.addEventListener('click', toggleFs);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const onControl = e.target.closest && e.target.closest('button, a, input, textarea, select');
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': e.preventDefault(); step(1); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); step(-1); break;
+      case ' ': if (!onControl) { e.preventDefault(); step(e.shiftKey ? -1 : 1); } break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F': toggleFs(); break;
+    }
+  });
+
+  function readHash() {
+    const m = /^#(\d+)$/.exec(location.hash);
+    return m ? Math.min(total, Math.max(1, parseInt(m[1], 10))) - 1 : 0;
+  }
+  window.addEventListener('hashchange', () => {
+    const i = readHash();
+    if (i !== index) goTo(i);
+  });
+
+  const start = readHash();
+  setIndex(start);
+  target = start;
+  deck.scrollLeft = start * width();
+  renderDayScores();
+  updateScore();
+})();
+</script>
+</body>
+
+</template>
+<template id="tpl-final">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#170B47">
+<title>Final Term Quiz · AR VR MR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --ink:#16133F;--white:#fff;--sky:#62B6FF;--sky-2:#9AD6FF;--lime:#C6F432;--sun:#FFD23F;--mint:#8FE9C0;
+  --night:#170B47;--violet:#2A1670;--cyan:#34E8FF;--amber:#FF9D4D;--red:#FF6B6B;--pink:#FF3EA5;
+  --display:"Lilita One","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--night);-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--body);color:var(--ink);font-size:18px;line-height:1.35;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.05;text-wrap:balance}
+h1{font-size:clamp(2.2rem,8vw,4.4rem)}
+h2{font-size:clamp(1.8rem,6vw,3rem)}
+h3{font-size:clamp(1.3rem,4vw,1.8rem)}
+[hidden]{display:none!important}
+
+/* page backdrops */
+.page{min-height:100vh;min-height:100dvh;padding:clamp(16px,4vw,48px) clamp(14px,4vw,48px) 120px;display:flex;flex-direction:column;align-items:center}
+.bg-neutral{background:radial-gradient(70vmin 50vmin at 85% 15%,rgba(255,255,255,.7),transparent 70%),#E9E3FF}
+.bg-ar{background:radial-gradient(60vmin 40vmin at 15% 12%,rgba(255,255,255,.55),transparent 70%),linear-gradient(180deg,var(--sky-2),var(--sky))}
+.bg-mix{background:linear-gradient(105deg,var(--sky) 0 50%,var(--night) 50% 100%)}
+.bg-quiz{background:repeating-linear-gradient(135deg,rgba(255,255,255,.28) 0 3.2vmin,transparent 3.2vmin 6.4vmin),var(--sun)}
+.bg-done{background:radial-gradient(60vmin 40vmin at 12% 10%,rgba(255,255,255,.5),transparent 70%),var(--mint)}
+.wrap{width:100%;max-width:920px}
+
+/* chips + panel */
+.chips{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+.chip{font-family:var(--display);font-size:clamp(2rem,9vw,3.6rem);line-height:1;padding:.08em .3em .12em;border:5px solid var(--ink);border-radius:.32em;box-shadow:7px 7px 0 var(--ink);color:var(--ink)}
+.chip.ar{background:var(--lime);border-style:dashed;transform:rotate(-4deg)}
+.chip.vr{background:var(--night);color:var(--cyan);border-color:var(--cyan);box-shadow:7px 7px 0 #05021F;transform:rotate(3deg)}
+.chip.mr{background:var(--amber);transform:rotate(-2deg)}
+.amp{display:grid;place-items:center;width:2.2rem;height:2.2rem;border:4px solid var(--ink);border-radius:50%;background:#fff;font:400 1.2rem/1 var(--display)}
+.panel{background:#fff;border:5px solid var(--ink);border-radius:28px;box-shadow:10px 10px 0 var(--ink);padding:clamp(18px,4vw,40px)}
+.lead{font-size:clamp(1.05rem,3vw,1.4rem);margin-top:10px}
+.center{text-align:center}
+.tag{display:inline-block;font:400 1rem/1 var(--display);padding:.35em .85em;border:3px solid var(--ink);border-radius:999px;background:#fff;box-shadow:3px 3px 0 var(--ink);margin-bottom:12px}
+
+/* buttons / inputs */
+.btn{font:400 1.3rem/1 var(--display);padding:.7em 1.3em;border:4px solid var(--ink);border-radius:999px;background:var(--sun);color:var(--ink);box-shadow:5px 5px 0 var(--ink);cursor:pointer;touch-action:manipulation}
+.btn:hover{background:var(--lime)}
+.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+.btn:focus-visible,.opt:focus-visible,input:focus-visible,.tf:focus-visible{outline:4px solid var(--violet);outline-offset:3px}
+.btn.alt{background:#fff}
+.btn.big{font-size:1.6rem}
+.field{display:block;margin-top:16px}
+.field span{display:block;font:400 1.15rem/1 var(--display);margin-bottom:6px}
+input[type=text],input[type=number]{width:100%;font:700 1.15rem/1.2 var(--body);padding:.7em .9em;border:4px solid var(--ink);border-radius:16px;background:#fff;color:var(--ink)}
+input::placeholder{color:#8a86b3;font-weight:400}
+.row2{display:grid;gap:0 16px;grid-template-columns:1fr}
+@media(min-width:640px){.row2{grid-template-columns:1fr 1fr}}
+.err{margin-top:12px;color:#B3261E;font-weight:700;background:#FFF0EF;border:3px solid #B3261E;border-radius:14px;padding:.6em .9em}
+input.bad{border-color:#B3261E!important;background:#FFF0EF}
+.card.missing{border-color:#B3261E;background:#FFF0EF}
+.actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;margin-top:26px}
+
+/* sticky bar */
+.bar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;gap:12px;justify-content:space-between;
+  padding:calc(8px + env(safe-area-inset-top)) clamp(12px,3vw,28px) 8px;background:var(--night);color:#fff;border-bottom:4px solid var(--cyan)}
+.bar b{font-family:var(--display);font-weight:400;font-size:1.05rem}
+.timer{font:400 1.5rem/1 var(--display);color:var(--lime);background:#05021F;border:3px solid var(--cyan);border-radius:999px;padding:.25em .7em;min-width:5.2ch;text-align:center}
+.timer.warn{color:var(--sun)}
+.timer.crit{color:#fff;background:#B3261E;border-color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.prog{position:fixed;top:0;left:0;height:6px;z-index:40;background:linear-gradient(90deg,var(--lime),var(--amber),var(--cyan));width:0;transition:width .3s}
+.withbar{padding-top:84px}
+
+/* full forms / golden rule rows */
+.qrow{display:grid;gap:12px;align-items:center;padding:14px;border:4px solid var(--ink);border-radius:20px;background:#fff;margin-top:16px;box-shadow:5px 5px 0 var(--ink)}
+@media(min-width:640px){.qrow{grid-template-columns:140px 1fr}}
+.qrow .big{font-family:var(--display);font-size:2.6rem;line-height:1;text-align:center;padding:.1em .3em;border:4px solid var(--ink);border-radius:18px}
+.big.ar{background:var(--lime);border-style:dashed}
+.big.vr{background:var(--night);color:var(--cyan);border-color:var(--cyan)}
+.big.mr{background:var(--amber)}
+.qrow label{font-weight:700;display:block;margin-bottom:6px}
+.qrow input{margin:0}
+
+/* question cards */
+.sec{width:100%;max-width:920px;margin-top:30px}
+.sechead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sechead h2{background:#fff;border:4px solid var(--ink);border-radius:18px;padding:.15em .6em;box-shadow:5px 5px 0 var(--ink)}
+.cnt{font:400 1.05rem/1 var(--display);background:var(--night);color:var(--cyan);padding:.4em .8em;border-radius:999px}
+.card{background:#fff;border:4px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);padding:16px 18px;margin-top:16px}
+.card.done{border-color:#0a8f57}
+.qn{font:400 1rem/1 var(--display);color:#fff;background:var(--violet);border-radius:999px;padding:.3em .7em;margin-right:8px;display:inline-block}
+.day{font-size:.85rem;font-weight:700;color:#5a55a0;float:right}
+.card p.q{font-size:1.15rem;font-weight:700;margin-top:6px}
+.opts{display:grid;gap:10px;margin-top:12px}
+@media(min-width:720px){.opts.two{grid-template-columns:1fr 1fr}}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;font:700 1.05rem/1.25 var(--body);padding:.65em .9em;border:4px solid var(--ink);border-radius:16px;background:#fff;color:var(--ink);box-shadow:4px 4px 0 var(--ink);cursor:pointer;touch-action:manipulation}
+.opt:hover{background:#F3F0FF}
+.opt.sel{background:var(--sky-2)}
+.opt i{font:normal 400 1rem/1.25 var(--display);background:var(--ink);color:#fff;border-radius:8px;padding:0 .45em}
+.tfrow{display:flex;gap:12px;margin-top:12px}
+.tf{flex:1;font:400 1.3rem/1 var(--display);padding:.7em;border:4px solid var(--ink);border-radius:16px;background:#fff;box-shadow:4px 4px 0 var(--ink);cursor:pointer;touch-action:manipulation}
+.tf.sel.t{background:var(--lime)}
+.tf.sel.f{background:var(--red);color:#fff}
+.cluebox input{margin-top:12px}
+.submitbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:12px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(0deg,rgba(23,11,71,.96),rgba(23,11,71,.75))}
+
+/* results */
+.score{font:400 clamp(3.5rem,16vw,7rem)/1 var(--display)}
+.grid3{display:grid;gap:14px;margin-top:20px}
+@media(min-width:640px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.stat{border:4px solid var(--ink);border-radius:20px;padding:12px;text-align:center;background:var(--sky-2);box-shadow:5px 5px 0 var(--ink)}
+.stat b{display:block;font:400 2rem/1 var(--display)}
+.rev{margin-top:12px;padding:12px 14px;border:4px solid var(--ink);border-radius:18px;background:#fff}
+.rev.ok{border-color:#0a8f57;background:#E9FBF2}
+.rev.no{border-color:#B3261E;background:#FFF0EF}
+.rev small{display:block;font-weight:700;color:#5a55a0}
+pre.sum{white-space:pre-wrap;font:700 .95rem/1.4 var(--body);background:#fff;border:4px dashed var(--ink);border-radius:16px;padding:14px;margin-top:14px}
+.note{font-size:.95rem;margin-top:14px;opacity:.85}
+@media print{.bar,.submitbar,.actions,.noprint{display:none!important}.withbar{padding-top:16px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+
+<!-- ============ DETAILS ============ -->
+<main class="page bg-neutral" id="p-details">
+  <div class="wrap">
+    <div class="chips" aria-hidden="true"><span class="chip ar">AR</span><span class="amp">+</span><span class="chip vr">VR</span><span class="amp">+</span><span class="chip mr">MR</span></div>
+    <div class="panel">
+      <p class="tag">Thursday · 12 Nov 2026</p>
+      <h1>AR · VR · MR Quiz</h1>
+      <p class="lead">Quaid-e-Azam Rangers School · Prepreneurship IT · PPship-IT-QRSC-ARVR Batch 1</p>
+      <p class="lead"><b>30 minutes.</b> Full forms, golden rules, then 15 clues, 15 MCQs and 15 true/false. The timer starts when you press <b>Start Quiz</b>.</p>
+      <form id="detailsForm" autocomplete="off" novalidate>
+        <div class="row2">
+          <label class="field"><span>Student name</span><input type="text" id="f-name" placeholder="Type your full name" maxlength="60"></label>
+          <label class="field"><span>Age</span><input type="number" id="f-age" placeholder="Type your age" inputmode="numeric" min="1" max="99"></label>
+          <label class="field"><span>Class group</span><input type="text" id="f-group" placeholder="e.g. Batch 1 / Group A" maxlength="40"></label>
+          <label class="field"><span>Number of classes attended (out of 27 so far)</span><input type="number" id="f-att" placeholder="Type a number" inputmode="numeric" min="0" max="31"></label>
+        </div>
+        <p class="err" id="detailsErr" role="alert" hidden></p>
+        <div class="actions" style="justify-content:flex-end"><button class="btn big" type="submit">Start Quiz ▶</button></div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- ============ PAGE 1 ============ -->
+<main class="page bg-ar withbar" id="p-1" hidden>
+  <div class="wrap">
+    <div class="panel">
+      <p class="tag">Page 1 of 3</p>
+      <h2>Full Forms</h2>
+      <p class="lead">Type what each short name stands for.</p>
+      <div class="qrow"><div class="big ar">AR</div><div><label for="ff-ar">AR stands for…</label><input type="text" id="ff-ar" placeholder="Type the full form" autocomplete="off"></div></div>
+      <div class="qrow"><div class="big vr">VR</div><div><label for="ff-vr">VR stands for…</label><input type="text" id="ff-vr" placeholder="Type the full form" autocomplete="off"></div></div>
+      <div class="qrow"><div class="big mr">MR</div><div><label for="ff-mr">MR stands for…</label><input type="text" id="ff-mr" placeholder="Type the full form" autocomplete="off"></div></div>
+      <p class="err" id="e1" role="alert" hidden></p>
+      <div class="actions"><span></span><button class="btn" data-go="2">Next: Golden Rules ▶</button></div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ PAGE 2 ============ -->
+<main class="page bg-mix withbar" id="p-2" hidden>
+  <div class="wrap">
+    <div class="panel">
+      <p class="tag">Page 2 of 3</p>
+      <h2>Golden Rules</h2>
+      <p class="lead">Finish each golden rule in your own words, in one short sentence.</p>
+      <div class="qrow"><div class="big ar">AR</div><div><label for="gr-ar">The golden rule of AR is…</label><input type="text" id="gr-ar" placeholder="AR … digital … real world" autocomplete="off"></div></div>
+      <div class="qrow"><div class="big vr">VR</div><div><label for="gr-vr">The golden rule of VR is…</label><input type="text" id="gr-vr" placeholder="VR … real world … digital" autocomplete="off"></div></div>
+      <div class="qrow"><div class="big mr">MR</div><div><label for="gr-mr">The golden rule of MR is…</label><input type="text" id="gr-mr" placeholder="MR … real and digital …" autocomplete="off"></div></div>
+      <p class="err" id="e2" role="alert" hidden></p>
+      <div class="actions"><span></span><button class="btn" data-go="3">Next: Questions ▶</button></div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ PAGE 3 ============ -->
+<main class="page bg-quiz withbar" id="p-3" hidden>
+  <div class="sec" style="margin-top:0">
+    <div class="panel"><p class="tag">Page 3 of 3</p><h2>The Big Round</h2><p class="lead">15 clues · 15 MCQs · 15 True/False. Answer as many as you can, then press <b>Submit Quiz</b> at the bottom.</p></div>
+  </div>
+  <section class="sec" id="s-clues"><div class="sechead"><h2>🕵️ 15 Clues</h2><span class="cnt" id="c-clues">0 / 15</span></div><p class="lead" style="margin:0 0 4px">Read the clue and type the answer. One word or short phrase.</p><div id="l-clues"></div></section>
+  <section class="sec" id="s-mcq"><div class="sechead"><h2>🎯 15 MCQs</h2><span class="cnt" id="c-mcq">0 / 15</span></div><div id="l-mcq"></div></section>
+  <section class="sec" id="s-tf"><div class="sechead"><h2>✅ 15 True / False</h2><span class="cnt" id="c-tf">0 / 15</span></div><div id="l-tf"></div></section>
+  <p class="err sec" id="e3" role="alert" hidden></p>
+</main>
+
+<!-- ============ RESULTS ============ -->
+<main class="page bg-done" id="p-res" hidden>
+  <div class="wrap">
+    <div class="panel center">
+      <p class="tag" id="r-tag">Quiz complete</p>
+      <h1 id="r-name">Well done!</h1>
+      <p class="score"><span id="r-score">0</span> / <span id="r-total">51</span></p>
+      <p class="lead" id="r-msg"></p>
+      <div class="grid3" id="r-stats"></div>
+    </div>
+    <div class="panel" style="margin-top:22px">
+      <h3>Result summary</h3>
+      <p class="lead" style="font-size:1rem">Take a screenshot of this page or copy the summary and send it to your teacher.</p>
+      <pre class="sum" id="r-sum"></pre>
+      <div class="actions noprint" style="justify-content:flex-start">
+        <button class="btn" id="b-copy">Copy summary</button>
+        <a class="btn alt" id="b-wa" target="_blank" rel="noopener" style="text-decoration:none">Send on WhatsApp</a>
+        <button class="btn alt" id="b-print">Print / Save PDF</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:22px">
+      <h3>Review your answers</h3>
+      <div id="r-review"></div>
+      <p class="note">Revision tip: replay the class slides for the days tagged on the questions you missed.</p>
+    </div>
+  </div>
+</main>
+
+<!-- sticky timer bar -->
+<div class="bar" id="bar" hidden><b>AR · VR · MR Quiz</b><span id="b-who" style="font-size:.9rem;opacity:.85"></span><span class="timer" id="timer">30:00</span></div>
+<div class="submitbar" id="sbar" hidden><button class="btn big" id="b-submit">Submit Quiz ✔</button></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const TOTAL_SECONDS = 30 * 60;
+
+/* ====================== QUESTION BANK (edit here) ====================== */
+/* Clues: typed answer, `ok` = accepted answers (lower case, no accents). */
+const CLUES = [
+ {d:'Day 2',q:'I ADD digital things on top of the real world. Who am I?',a:'AR (Augmented Reality)',ok:['ar','augmented reality','augmented']},
+ {d:'Day 2',q:'I REPLACE the real world with a completely digital one. Who am I?',a:'VR (Virtual Reality)',ok:['vr','virtual reality','virtual']},
+ {d:'Day 2',q:'I BLEND real and digital so they can touch and interact. Who am I?',a:'MR (Mixed Reality)',ok:['mr','mixed reality','mixed']},
+ {d:'Day 1',q:'I am the umbrella word that covers AR, VR and MR together. Who am I?',a:'XR (Extended Reality)',ok:['xr','extended reality','extended']},
+ {d:'Day 3',q:'I am the phone sensor that measures tilt and rotation. Who am I?',a:'Gyroscope',ok:['gyroscope','gyro']},
+ {d:'Day 3',q:'I track your location outdoors so AR objects can sit at real places. Who am I?',a:'GPS (Global Positioning System)',ok:['gps','global positioning system']},
+ {d:'Day 3',q:'I measure the exact distance from a device to walls and objects. My name is a laser-radar type of depth sensor. Who am I?',a:'LiDAR (depth sensor)',ok:['lidar','depth sensor','depth sensors','depth']},
+ {d:'Day 6',q:'I am the 3D "home base" point where X, Y and Z are all zero. Who am I?',a:'The Origin (0, 0, 0)',ok:['origin','the origin','0,0,0','0 0 0','000']},
+ {d:'Day 6',q:'I am the axis shown in GREEN. I control up and down movement. Who am I?',a:'Y-axis',ok:['y','y axis','yaxis','y-axis','the y axis']},
+ {d:'5 Nov',q:'In MR, I keep a digital object fixed to a real place, so it stays there when you walk around it. What am I called?',a:'Spatial anchor',ok:['spatial anchor','anchor','spatial anchors','anchors','anchoring']},
+ {d:'Day 3',q:'I am the computer-vision job that finds flat floors, tables and walls so AR objects can sit on them. Who am I?',a:'Plane detection',ok:['plane detection','plane','surface detection','planes']},
+ {d:'Day 1',q:'I am the phone game that passed 1 billion downloads by putting digital creatures in real places. Who am I?',a:'Pokémon Go',ok:['pokemon go','pokemon','pokemongo']},
+ {d:'Day 5',q:'I am the digital character that represents YOU inside a VR world or VR concert. Who am I?',a:'Avatar',ok:['avatar','an avatar']},
+ {d:'Day 7',q:'In the safety rule, how many minutes should you aim for between eye/body breaks? (type the number)',a:'25 minutes (rule: every 20–30)',ok:['25','25 minutes','25 min','25 minute']},
+ {d:'Day 1',q:'In Prompt Anatomy, I am the first element: I tell the AI WHO to act as. Who am I?',a:'Role',ok:['role','the role']}
+];
+/* MCQs: options array, `c` = index of correct option. */
+const MCQ = [
+ {d:'Day 2',q:'What is the golden rule of Augmented Reality (AR)?',o:['It replaces the real world with pixels','It adds digital things to the real world','It needs complete darkness','It blends real and digital so you can touch both'],c:1},
+ {d:'Day 6',q:'In 3D space, which colour is the Z-axis (depth)?',o:['Red','Green','Blue','Yellow'],c:2},
+ {d:'Day 6',q:'A 3D object starts at the origin (0,0,0). You move it 4 units right (X), 2 units up (Y) and 5 units forward (Z). Where is it now?',o:['(2, 4, 5)','(4, 2, 5)','(5, 4, 2)','(4, 5, 2)'],c:1},
+ {d:'Day 7',q:'How often should you take a break when using AR/VR devices?',o:['Every 2 hours','Only when the battery dies','Every 25 minutes (20–30)','Every 5 minutes'],c:2},
+ {d:'Day 3',q:'At minimum, basic AR on a phone needs…',o:['A VR headset','A camera and a display screen','A see-through MR headset','Nothing at all'],c:1},
+ {d:'Day 7',q:'You feel dizzy in VR. What is the right thing to do?',o:['Keep playing until it passes','Spin faster to get used to it','Sit down, take the headset off and rest','Turn up the volume'],c:2},
+ {d:'Day 6',q:'A surgeon sees a 3D hologram of an organ floating over the REAL patient. This is…',o:['AR only','VR','MR','None of these'],c:2},
+ {d:'Day 5',q:'Firefighters practise rescues inside a virtual burning building. Which reality is this?',o:['VR','AR','MR','XR is not used here'],c:0},
+ {d:'Day 10',q:'A sports coach uses AR glasses to see live player stats on the real field. Why is this AR?',o:['The field disappears','Digital stats are ADDED on top of the real field','A hologram touches the players','It uses a VR headset'],c:1},
+ {d:'Day 9',q:'Which free phone feature lets you place a 3D lion in your real room by searching for it?',o:['Google "View in 3D"','A VR roller-coaster app','A paid movie app','The calculator'],c:0},
+ {d:'Day 8',q:'What is the correct order of the 4-step invention process?',o:['Name → Gear → Problem → Reality','Problem → Reality → Gear → Name','Gear → Name → Problem → Reality','Reality → Name → Problem → Gear'],c:1},
+ {d:'Day 5',q:'A filmmaker wears a see-through headset and sees a digital dinosaur standing on the real film set. Which reality?',o:['AR on a phone','VR','MR','None'],c:2},
+ {d:'Day 4',q:'Why should you ask permission before wearing smart/MR glasses with cameras inside someone\'s home?',o:['The glasses might run out of battery','They can record the private space and people','It makes the room dark','There is no reason'],c:1},
+ {d:'5 Nov',q:'In VR, what does head tracking do?',o:['It records your face for social media','It changes what you see as you turn and move your head','It measures how hot the headset is','It turns the headset off when you sit down'],c:1},
+ {d:'2 Nov',q:'Which list correctly gives the four parts of the MR design framework?',o:['Real foundation, digital element, dynamic interaction, hand-gesture controls','Headset, battery, charger, controller','Problem, reality, gear, name','Camera, GPS, gyroscope, LiDAR'],c:0}
+];
+/* True / False: `c` = true/false */
+const TF = [
+ {d:'Day 2',q:'AR hides the real world completely.',c:false},
+ {d:'Day 2',q:'VR replaces the real world with a fully digital one.',c:true},
+ {d:'Day 2',q:'In MR, digital and real objects can interact with each other.',c:true},
+ {d:'Day 6',q:'A positive Y value moves an object UP.',c:true},
+ {d:'Day 6',q:'The Y-axis (up and down) is shown in Blue.',c:false},
+ {d:'Day 3',q:'Basic AR can run with just a phone camera and screen.',c:true},
+ {d:'Day 7',q:'It is fine to play an AR game for 2 hours with no break.',c:false},
+ {d:'Day 7',q:'If you feel dizzy in VR, you should keep going so you get used to it.',c:false},
+ {d:'Day 7',q:'You must ask permission before recording inside someone\'s private home with smart glasses.',c:true},
+ {d:'Day 1',q:'Pokémon Go is an example of AR.',c:true},
+ {d:'Day 6',q:'The origin of 3D space is the point (1, 1, 1).',c:false},
+ {d:'5 Nov',q:'When you design an XR experience, the text on screen should be clear and easy to read.',c:true},
+ {d:'5 Nov',q:'Spatial anchors help a digital object stay fixed in one real place in MR.',c:true},
+ {d:'Day 9',q:'A face filter that adds animal ears is an example of AR.',c:true},
+ {d:'Day 1',q:'Code errors and debugging are a normal part of building, not a failure.',c:true}
+];
+const FULL = {ar:['augmented reality'],vr:['virtual reality'],mr:['mixed reality']};
+const GOLD = {
+ ar:{show:'AR adds digital to the real world.',test:t=>/\badd/.test(t)||/\bover(lay)?/.test(t)||/\bon top/.test(t)},
+ vr:{show:'VR replaces the real world with a digital one.',test:t=>/replac/.test(t)||/\bswap/.test(t)||/\bfully digital|completely digital|block/.test(t)},
+ mr:{show:'MR blends real and digital so they can touch / interact.',test:t=>/blend|mix|interact|touch|together|combin/.test(t)}
+};
+
+/* ====================== helpers ====================== */
+const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9, ]+/g,' ').replace(/\s+/g,' ').trim();
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;const d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+function textMatch(input,list){
+  const t=norm(input); if(!t) return false;
+  return list.some(a=>{ a=norm(a);
+    if(t===a) return true;
+    if(a.length>=6 && lev(t,a)<=1) return true;           // tolerate one typo
+    if(a.length>=4 && t.length>a.length && t.split(' ').includes(a)) return true; // "the origin" etc
+    if(a.length>=7 && t.includes(a)) return true;
+    return false; });
+}
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mmss = s => String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+
+/* ====================== state ====================== */
+const S = {who:{}, clue:Array(CLUES.length).fill(''), mcq:Array(MCQ.length).fill(null), tf:Array(TF.length).fill(null),
+           left:TOTAL_SECONDS, tick:null, started:false, done:false, page:'details'};
+
+/* ====================== build question lists ====================== */
+$('#l-clues').innerHTML = CLUES.map((c,i)=>`
+ <div class="card cluebox" id="cl-${i}"><span class="qn">${i+1}</span><span class="day">${c.d}</span>
+  <p class="q">${esc(c.q)}</p><input type="text" data-clue="${i}" placeholder="Type your answer" autocomplete="off" aria-label="Answer to clue ${i+1}"></div>`).join('');
+$('#l-mcq').innerHTML = MCQ.map((m,i)=>`
+ <div class="card" id="mc-${i}"><span class="qn">${i+1}</span><span class="day">${m.d}</span>
+  <p class="q">${esc(m.q)}</p><div class="opts two">${m.o.map((o,k)=>`<button type="button" class="opt" data-mcq="${i}" data-k="${k}"><i>${'ABCD'[k]}</i><span>${esc(o)}</span></button>`).join('')}</div></div>`).join('');
+$('#l-tf').innerHTML = TF.map((t,i)=>`
+ <div class="card" id="tf-${i}"><span class="qn">${i+1}</span><span class="day">${t.d}</span>
+  <p class="q">${esc(t.q)}</p><div class="tfrow"><button type="button" class="tf t" data-tf="${i}" data-v="1">✔ True</button><button type="button" class="tf f" data-tf="${i}" data-v="0">✘ False</button></div></div>`).join('');
+
+/* ====================== navigation ====================== */
+const pages = {details:'#p-details',1:'#p-1',2:'#p-2',3:'#p-3',res:'#p-res'};
+function show(p){
+  S.page=p;
+  Object.values(pages).forEach(s=>$(s).hidden=true);
+  $(pages[p]).hidden=false;
+  const inQuiz = ['1','2','3',1,2,3].includes(p);
+  $('#bar').hidden = !inQuiz; $('#sbar').hidden = !inQuiz;
+  $('#prog').style.width = ({details:'0%',1:'20%',2:'40%',3:'60%',res:'100%'})[p];
+  window.scrollTo(0,0);
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');
+  if(g){const to=+g.dataset.go; if(to===2&&!checkFields(['ff-ar','ff-vr','ff-mr'],'e1'))return; if(to===3&&!checkFields(['gr-ar','gr-vr','gr-mr'],'e2'))return; show(to);return;}
+  const m=e.target.closest('[data-mcq]');
+  if(m){const i=+m.dataset.mcq;S.mcq[i]=+m.dataset.k;$$(`[data-mcq="${i}"]`).forEach(b=>b.classList.toggle('sel',b===m));refreshCounts();return;}
+  const t=e.target.closest('[data-tf]');
+  if(t){const i=+t.dataset.tf;S.tf[i]=t.dataset.v==='1';$$(`[data-tf="${i}"]`).forEach(b=>b.classList.toggle('sel',b===t));refreshCounts();return;}
+});
+document.addEventListener('input',e=>{
+  const c=e.target.closest('[data-clue]'); if(c){S.clue[+c.dataset.clue]=c.value;refreshCounts();}
+});
+function refreshCounts(){
+  $$('.card.missing').forEach(c=>{if(c.classList.contains('done'))c.classList.remove('missing');});
+  const a=S.clue.filter(x=>x.trim()).length, b=S.mcq.filter(x=>x!==null).length, c=S.tf.filter(x=>x!==null).length;
+  $('#c-clues').textContent=a+' / 15'; $('#c-mcq').textContent=b+' / 15'; $('#c-tf').textContent=c+' / 15';
+  S.clue.forEach((v,i)=>$('#cl-'+i).classList.toggle('done',!!v.trim()));
+  S.mcq.forEach((v,i)=>$('#mc-'+i).classList.toggle('done',v!==null));
+  S.tf.forEach((v,i)=>$('#tf-'+i).classList.toggle('done',v!==null));
+}
+
+/* ====================== details → start ====================== */
+$('#detailsForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=$('#f-name').value.trim(), age=$('#f-age').value.trim(), grp=$('#f-group').value.trim(), att=$('#f-att').value.trim();
+  const err=$('#detailsErr');
+  const miss=[]; if(!name)miss.push('name'); if(!age)miss.push('age'); if(!grp)miss.push('class group'); if(att==='')miss.push('classes attended');
+  if(miss.length){err.textContent='Please fill in: '+miss.join(', ')+'.';err.hidden=false;return;}
+  err.hidden=true;
+  S.who={name,age,grp,att};
+  $('#b-who').textContent=name;
+  startTimer(); show(1);
+});
+function startTimer(){
+  if(S.started) return; S.started=true; S.left=TOTAL_SECONDS; paintTimer();
+  S.tick=setInterval(()=>{ S.left--; paintTimer(); if(S.left<=0){ finish(true); } },1000);
+}
+function paintTimer(){
+  const t=$('#timer'); t.textContent=mmss(Math.max(0,S.left));
+  t.classList.toggle('warn',S.left<=300&&S.left>60); t.classList.toggle('crit',S.left<=60);
+}
+
+/* ====================== submit + marking ====================== */
+function checkFields(ids,errId){
+  const e=$('#'+errId); let first=null;
+  ids.forEach(id=>{const el=$('#'+id); const bad=!el.value.trim(); el.classList.toggle('bad',!bad?false:true); if(bad&&!first)first=el;});
+  if(first){e.textContent='⚠ Please fill in every field before moving on. You cannot come back to this page.';e.hidden=false;first.focus();return false;}
+  e.hidden=true;return true;
+}
+document.addEventListener('input',e=>{if(e.target.classList.contains('bad')&&e.target.value.trim())e.target.classList.remove('bad');});
+$('#b-submit').addEventListener('click',()=>{
+  let first=null,n=0;
+  const mark=(el,bad)=>{el.classList.toggle('missing',bad);if(bad){n++;if(!first)first=el;}};
+  S.clue.forEach((v,i)=>mark($('#cl-'+i),!v.trim()));
+  S.mcq.forEach((v,i)=>mark($('#mc-'+i),v===null));
+  S.tf.forEach((v,i)=>mark($('#tf-'+i),v===null));
+  const e=$('#e3');
+  if(n){e.textContent='⚠ '+n+' question'+(n>1?'s are':' is')+' not answered (highlighted in red). Please answer every question before submitting.';e.hidden=false;first.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  e.hidden=true;
+  if(!confirm('Submit your quiz now? You cannot change answers after this.'))return;
+  finish(false);
+});
+window.addEventListener('beforeunload',e=>{ if(S.started&&!S.done){e.preventDefault();e.returnValue='';} });
+
+function finish(timeUp){
+  if(S.done) return; S.done=true; clearInterval(S.tick);
+  const used = TOTAL_SECONDS - Math.max(0,S.left);
+  const R = {ff:[],gr:[],clue:[],mcq:[],tf:[]};
+  ['ar','vr','mr'].forEach(k=>{
+    const v=$('#ff-'+k).value; R.ff.push({k:k.toUpperCase(),v,ok:textMatch(v,FULL[k]),a:FULL[k][0].replace(/\b\w/g,c=>c.toUpperCase())});
+    const g=$('#gr-'+k).value; R.gr.push({k:k.toUpperCase(),v:g,ok:GOLD[k].test(norm(g)),a:GOLD[k].show});
+  });
+  CLUES.forEach((c,i)=>R.clue.push({n:i+1,d:c.d,q:c.q,v:S.clue[i],ok:textMatch(S.clue[i],c.ok),a:c.a}));
+  MCQ.forEach((m,i)=>R.mcq.push({n:i+1,d:m.d,q:m.q,v:S.mcq[i]===null?'':m.o[S.mcq[i]],ok:S.mcq[i]===m.c,a:m.o[m.c]}));
+  TF.forEach((t,i)=>R.tf.push({n:i+1,d:t.d,q:t.q,v:S.tf[i]===null?'':(S.tf[i]?'True':'False'),ok:S.tf[i]===t.c,a:t.c?'True':'False'}));
+  const sc=a=>a.filter(x=>x.ok).length;
+  const s={ff:sc(R.ff),gr:sc(R.gr),clue:sc(R.clue),mcq:sc(R.mcq),tf:sc(R.tf)};
+  const total=s.ff+s.gr+s.clue+s.mcq+s.tf, max=3+3+15+15+15, pct=Math.round(total/max*100);
+  render(R,s,total,max,pct,used,timeUp);
+}
+function render(R,s,total,max,pct,used,timeUp){
+  $('#r-tag').textContent = timeUp ? "Time's up!" : 'Quiz complete';
+  $('#r-name').textContent = S.who.name+', well done!';
+  $('#r-score').textContent = total; $('#r-total').textContent = max;
+  $('#r-msg').textContent = (pct>=85?'AR/VR/MR Expert! 🏆':pct>=65?'Great job, Ranger! 🌟':pct>=40?'Good effort — revise and try again! 💪':'Keep practising, you will get there! 🚀')+'  ('+pct+'%)';
+  $('#r-stats').innerHTML = [['Full forms',s.ff,3],['Golden rules',s.gr,3],['Clues',s.clue,15],['MCQs',s.mcq,15],['True / False',s.tf,15],['Time used',mmss(used),'']]
+    .map(([n,v,m])=>`<div class="stat"><span>${n}</span><b>${v}${m!==''?' / '+m:''}</b></div>`).join('');
+  const date='Thu 12 Nov 2026';
+  const sum=[`AR·VR·MR QUIZ — ${date}`,'Quaid-e-Azam Rangers School · PPship-IT-QRSC-ARVR Batch 1',
+    `Name: ${S.who.name}`,`Age: ${S.who.age}`,`Class group: ${S.who.grp}`,`Classes attended: ${S.who.att}`,
+    `SCORE: ${total} / ${max} (${pct}%)`,
+    `Full forms ${s.ff}/3 · Golden rules ${s.gr}/3 · Clues ${s.clue}/15 · MCQs ${s.mcq}/15 · True/False ${s.tf}/15`,
+    `Time used: ${mmss(used)} of 30:00`].join('\n');
+  $('#r-sum').textContent=sum;
+  $('#b-wa').href='https://wa.me/?text='+encodeURIComponent(sum);
+  const rev=(title,arr,withQ)=>`<h3 style="margin-top:22px">${title}</h3>`+arr.map(x=>`
+   <div class="rev ${x.ok?'ok':'no'}"><small>${x.ok?'✔ Correct':'✘ Not quite'}${x.d?' · '+x.d:''}</small>
+   ${withQ?`<b>${x.n?x.n+'. ':''}${esc(x.q||x.k)}</b><br>`:`<b>${esc(x.k)}</b><br>`}
+   Your answer: ${x.v?esc(x.v):'<i>(blank)</i>'}${x.ok?'':`<br>Correct answer: <b>${esc(x.a)}</b>`}</div>`).join('');
+  $('#r-review').innerHTML = rev('Page 1 · Full forms',R.ff,false)+rev('Page 2 · Golden rules',R.gr,false)
+    +rev('Clues',R.clue,true)+rev('MCQs',R.mcq,true)+rev('True / False',R.tf,true);
+  show('res');
+}
+$('#b-copy').addEventListener('click',async()=>{
+  const t=$('#r-sum').textContent, b=$('#b-copy');
+  try{await navigator.clipboard.writeText(t);b.textContent='Copied ✔';}
+  catch(_){const r=document.createRange();r.selectNodeContents($('#r-sum'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected — press Copy';}
+  setTimeout(()=>b.textContent='Copy summary',2200);
+});
+$('#b-print').addEventListener('click',()=>window.print());
+
+/* test hook */
+window.__quiz={CLUES,MCQ,TF,S,textMatch,GOLD,finish};
+show('details'); refreshCounts();
+})();
+</script>
+</body>
+
+</template>
+
+<script>
+(function(){
+  'use strict';
+  var T={mid:{tpl:'tpl-mid',title:'Mid-Term Review Quiz'},final:{tpl:'tpl-final',title:'Final Term Quiz'}};
+  var host=document.getElementById('host'),frames={},cur=null;
+  function show(k){
+    if(!T[k])return; cur=k;
+    if(!frames[k]){
+      var f=document.createElement('iframe'); f.title=T[k].title;
+      f.srcdoc='<!DOCTYPE html><html lang="en">'+document.getElementById(T[k].tpl).innerHTML;
+      host.appendChild(f); frames[k]=f;
+    }
+    Object.keys(frames).forEach(function(x){frames[x].style.display=(x===k)?'block':'none';});
+    ['mid','final'].forEach(function(x){document.getElementById('t-'+x).setAttribute('aria-selected',x===k);});
+    document.title=T[k].title+' · AR VR MR';
+    try{history.replaceState(null,'','#'+k);}catch(e){}
+  }
+  document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.k);});});
+  var h=location.hash.slice(1); show(T[h]?h:'final');
+})();
+</script>
+</body>
+</html>
